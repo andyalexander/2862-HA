@@ -1,13 +1,15 @@
 # DrayTek DSL Speed Monitor for Home Assistant
 
-A Home Assistant custom integration that exposes two sensors showing the current DSL line sync speeds on a **DrayTek Vigor 2862** (and other Vigor VDSL/ADSL routers).
+A Home Assistant custom integration that monitors DSL line stats on a **DrayTek Vigor 2862** (and other Vigor VDSL/ADSL routers).
 
 | Sensor | Unit | Description |
 |--------|------|-------------|
-| DSL Download Speed | kbit/s | Downstream DSL sync rate |
-| DSL Upload Speed | kbit/s | Upstream DSL sync rate |
+| DSL Download Speed | Mbit/s | Downstream DSL sync rate |
+| DSL Upload Speed | Mbit/s | Upstream DSL sync rate |
+| DSL SNR Downstream | dB | Signal-to-noise ratio downstream (VDSL only) |
+| DSL SNR Upstream | dB | Signal-to-noise ratio upstream (VDSL only) |
 
-Home Assistant automatically converts kbit/s to Mbit/s in dashboards and energy cards.
+SNR sensors are populated when the router's Physical Connection page is available (Vigor 2862 and similar VDSL2 models). They report unavailable on routers where only the legacy DSL Status page is accessible.
 
 ---
 
@@ -50,7 +52,7 @@ No additional router configuration is required — SNMP does **not** need to be 
 
 ## Setting Up the Integration (Username & Password)
 
-Your router credentials are entered through the Home Assistant UI and stored **encrypted** in HA's internal config store. They are never written to any plain-text file such as `configuration.yaml`.
+Your router credentials are entered through the Home Assistant UI and stored on your Home Assistant server. They are never written to `configuration.yaml` or any log output.
 
 1. Go to **Settings → Devices & Services**
 2. Click **+ Add Integration** (bottom-right)
@@ -67,7 +69,7 @@ Your router credentials are entered through the Home Assistant UI and stored **e
 5. Click **Submit**. The integration will attempt to log in and fetch the DSL status page. If it succeeds, two new sensors will appear under a **DrayTek Vigor** device.
 
 > **Where is the password stored?**
-> Home Assistant encrypts all config entry data (including passwords) using its internal secret store. The password is never visible in `configuration.yaml`, `.storage/`, or any log output.
+> Credentials are stored in HA's internal config store (`.storage/core.config_entries`) protected by the filesystem permissions of your HA server. The password is never written to `configuration.yaml` or any log output.
 
 ### Updating credentials
 
@@ -81,9 +83,19 @@ The default admin password for the Vigor 2862 is printed on the label on the und
 
 ## How It Works
 
-1. Every 60 seconds the integration logs in to the router at `/cgi-bin/wlogin.cgi` using your credentials (base64-encoded, the same way the router's own web UI does it)
-2. It fetches the DSL diagnostics page — equivalent to **Diagnostics → DSL Status** in the router web UI — and parses the downstream and upstream sync rates
-3. The two sensor values update in Home Assistant automatically
+1. Every 10 minutes the integration logs in to the router at `/cgi-bin/wlogin.cgi` using your credentials (base64-encoded, the same way the router's own web UI does it)
+2. It fetches the Physical Connection page (`Diagnostics → Physical Connection`) and parses speeds and SNR values. If that page is unavailable it falls back to the DSL Status page (`Diagnostics → DSL Status`) for speeds only
+3. The sensor values update in Home Assistant automatically
+
+### Changing the refresh interval
+
+The poll interval is set in `custom_components/draytek_dsl/const.py`:
+
+```python
+DEFAULT_SCAN_INTERVAL = 600  # seconds (10 minutes)
+```
+
+Change the value (in seconds) and restart Home Assistant. For example, `300` = 5 minutes, `3600` = 1 hour. There is no need to change anything else — the coordinator picks up the constant at startup.
 
 ---
 
