@@ -46,6 +46,7 @@ SENSOR_DESCRIPTIONS: tuple[DraytekSensorDescription, ...] = (
     DraytekSensorDescription(
         key="download_speed",
         name="DSL Download Speed",
+        icon="mdi:download-network",
         device_class=SensorDeviceClass.DATA_RATE,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfDataRate.MEGABITS_PER_SECOND,
@@ -54,6 +55,7 @@ SENSOR_DESCRIPTIONS: tuple[DraytekSensorDescription, ...] = (
     DraytekSensorDescription(
         key="upload_speed",
         name="DSL Upload Speed",
+        icon="mdi:upload-network",
         device_class=SensorDeviceClass.DATA_RATE,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfDataRate.MEGABITS_PER_SECOND,
@@ -62,6 +64,7 @@ SENSOR_DESCRIPTIONS: tuple[DraytekSensorDescription, ...] = (
     DraytekSensorDescription(
         key="snr_upstream",
         name="DSL SNR Upstream",
+        icon="mdi:signal",
         device_class=SensorDeviceClass.SIGNAL_STRENGTH,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfSoundPressure.DECIBEL,
@@ -70,6 +73,7 @@ SENSOR_DESCRIPTIONS: tuple[DraytekSensorDescription, ...] = (
     DraytekSensorDescription(
         key="snr_downstream",
         name="DSL SNR Downstream",
+        icon="mdi:signal",
         device_class=SensorDeviceClass.SIGNAL_STRENGTH,
         state_class=SensorStateClass.MEASUREMENT,
         native_unit_of_measurement=UnitOfSoundPressure.DECIBEL,

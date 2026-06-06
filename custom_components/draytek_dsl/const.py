@@ -1,6 +1,6 @@
 DOMAIN = "draytek_dsl"
 DEFAULT_PORT = 80
-DEFAULT_SCAN_INTERVAL = 60
+DEFAULT_SCAN_INTERVAL = 600
 
 # Physical Connection page — provides speeds + SNR for VDSL2 (Vigor 2862 and similar).
 # Preferred over the DSL Status fallback paths below.
