@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "DrayTek DSL Speed Monitor",
-        "description": "Connect to your DrayTek Vigor router to monitor DSL line speeds. Credentials are stored securely and never exposed in plain text.",
+        "description": "Connect to your DrayTek Vigor router to monitor DSL line speeds. Credentials are stored on your Home Assistant server and protected by its filesystem permissions.",
         "data": {
           "host": "Router IP address or hostname",
           "port": "Web interface port",
